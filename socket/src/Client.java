@@ -5,6 +5,7 @@ public class Client {
 
     public static void main(String[] args) {
         // 初始化
+        final String QUIT = "quit";
         final String DEFAULT_SERVER_HOST = "127.0.0.1";
         final int DEFAULT_PORT = 8888;
         Socket socket = null;
@@ -19,15 +20,23 @@ public class Client {
 
             // 等待用户输入信息
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            String input = consoleReader.readLine();
 
-            // 向服务器发送信息
-            writer.write(input + "\n");
-            writer.flush();
+            while (true) {
+                String input = consoleReader.readLine();
 
-            // 读取服务器返回消息
-            String msg = reader.readLine();
-            System.out.println(msg);
+                // 向服务器发送信息
+                writer.write(input + "\n");
+                writer.flush();
+
+                // 读取服务器返回消息
+                String msg = reader.readLine();
+                System.out.println(msg);
+
+                // 判断是否退出
+                if (QUIT.equals(input)) {
+                    break;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

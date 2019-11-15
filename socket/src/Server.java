@@ -6,6 +6,7 @@ public class Server {
 
     public static void main(String[] args) {
         // 初始化
+        final String QUIT = "quit";
         final int DEFAULT_PORT = 8888;
         ServerSocket serverSocket = null;
 
@@ -22,14 +23,22 @@ public class Server {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            String msg = reader.readLine();
-            if (msg != null) {
+            // 读取消息
+            String msg;
+            while ((msg = reader.readLine()) != null) {
                 System.out.println("客户端[" + socket.getPort() + "]发送消息: " + msg);
 
                 // 发送消息，发送所有缓冲区数据
                 writer.write("服务器: " + msg + "\n");
                 writer.flush();
+
+                // 判断是否退出
+                if (QUIT.equals(msg)) {
+                    break;
+                }
             }
+
+            System.out.println("客户端断开连接");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
