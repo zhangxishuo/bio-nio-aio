@@ -16,14 +16,20 @@ public class Client {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            String input = consoleReader.readLine();
-            writer.write(input);
-            writer.newLine();
-            writer.flush();
+            while (true) {
+                BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+                String input = consoleReader.readLine();
+                writer.write(input);
+                writer.newLine();
+                writer.flush();
 
-            String msg = reader.readLine();
-            System.out.println(msg);
+                String msg = reader.readLine();
+                System.out.println(msg);
+
+                if (SocketConstant.EXIT.equals(input)) {
+                    break;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
