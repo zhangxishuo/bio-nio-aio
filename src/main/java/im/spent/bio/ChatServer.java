@@ -1,5 +1,7 @@
 package im.spent.bio;
 
+import im.spent.constant.SocketConstant;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -13,6 +15,11 @@ public class ChatServer {
 
     private ServerSocket serverSocket;
     private Map<Integer, Writer> connectedClients;
+
+    public static void main(String[] args) {
+        ChatServer server = new ChatServer();
+        server.start();
+    }
 
     public ChatServer() {
         this.connectedClients = new HashMap<Integer, Writer>();
@@ -44,6 +51,32 @@ public class ChatServer {
                 Writer writer = entry.getValue();
                 writer.write(msg);
                 writer.flush();
+            }
+        }
+    }
+
+    public void start() {
+        try {
+            this.serverSocket = new ServerSocket(SocketConstant.DEFAULT_PORT);
+            System.out.println("服务器启动于: " + SocketConstant.DEFAULT_PORT);
+
+            while (true) {
+                Socket socket = this.serverSocket.accept();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            this.close();
+        }
+    }
+
+    public void close() {
+        if (this.serverSocket != null) {
+            try {
+                this.serverSocket.close();
+                System.out.println("服务器关闭");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
