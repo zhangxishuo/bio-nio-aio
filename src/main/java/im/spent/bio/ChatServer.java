@@ -49,7 +49,7 @@ public class ChatServer {
         for (Map.Entry<Integer, Writer> entry : connectedClients.entrySet()) {
             if (!entry.getKey().equals(socket.getPort())) {
                 Writer writer = entry.getValue();
-                writer.write(msg);
+                writer.write(msg + "\n");
                 writer.flush();
             }
         }
