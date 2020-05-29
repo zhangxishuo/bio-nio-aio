@@ -43,6 +43,8 @@ public class ChatClient {
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
+            new Thread(new UserInputHandler(this)).start();
+
             String msg;
             while ((msg = this.receive()) != null) {
                 System.out.println(msg);
