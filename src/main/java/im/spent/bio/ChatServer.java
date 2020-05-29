@@ -25,7 +25,7 @@ public class ChatServer {
         this.connectedClients = new HashMap<Integer, Writer>();
     }
 
-    public void addClient(Socket socket) throws IOException {
+    public synchronized void addClient(Socket socket) throws IOException {
         if (socket != null) {
             int port = socket.getPort();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -34,7 +34,7 @@ public class ChatServer {
         }
     }
 
-    public void removeClient(Socket socket) throws IOException {
+    public synchronized void removeClient(Socket socket) throws IOException {
         if (socket != null) {
             int port = socket.getPort();
             if (this.connectedClients.containsKey(port)) {
@@ -55,6 +55,10 @@ public class ChatServer {
         }
     }
 
+    public boolean readyToExit(String msg) {
+        return SocketConstant.EXIT.equals(msg);
+    }
+
     public void start() {
         try {
             this.serverSocket = new ServerSocket(SocketConstant.DEFAULT_PORT);
@@ -62,6 +66,7 @@ public class ChatServer {
 
             while (true) {
                 Socket socket = this.serverSocket.accept();
+                new Thread(new ChatHandler(this, socket)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
